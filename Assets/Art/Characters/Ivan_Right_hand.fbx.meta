@@ -1,0 +1,198 @@
+fileFormatVersion: 2
+guid: ed480bd9354e5184eba392f7f44b1d65
+timeCreated: 1513696127
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: head
+    100002: index_L_1
+    100004: index_L_2
+    100006: index_L_3
+    100008: index_L_end
+    100010: index_R_1
+    100012: index_R_2
+    100014: index_R_3
+    100016: index_R_end
+    100018: IvaHand
+    100020: //RootNode
+    100022: MASTER
+    100024: meshes
+    100026: metacarpo_L
+    100028: metacarpo_R
+    100030: middle_L_1
+    100032: middle_L_2
+    100034: middle_L_3
+    100036: middle_L_end
+    100038: middle_R_1
+    100040: middle_R_2
+    100042: middle_R_3
+    100044: middle_R_end
+    100046: pinky_L_1
+    100048: pinky_L_2
+    100050: pinky_L_3
+    100052: pinky_L_end
+    100054: pinky_R_1
+    100056: pinky_R_2
+    100058: pinky_R_3
+    100060: pinky_R_end
+    100062: ring_L_1
+    100064: ring_L_2
+    100066: ring_L_3
+    100068: ring_L_end
+    100070: ring_R_1
+    100072: ring_R_2
+    100074: ring_R_3
+    100076: ring_R_end
+    100078: Root
+    100080: thumb_L_1
+    100082: thumb_L_2
+    100084: thumb_L_3
+    100086: thumb_L_end
+    100088: thumb_R_1
+    100090: thumb_R_2
+    100092: thumb_R_3
+    100094: thumb_R_end
+    100096: wrist_L
+    100098: Wrist_L_root
+    100100: wrist_R
+    100102: Wrist_R_root
+    400000: head
+    400002: index_L_1
+    400004: index_L_2
+    400006: index_L_3
+    400008: index_L_end
+    400010: index_R_1
+    400012: index_R_2
+    400014: index_R_3
+    400016: index_R_end
+    400018: IvaHand
+    400020: //RootNode
+    400022: MASTER
+    400024: meshes
+    400026: metacarpo_L
+    400028: metacarpo_R
+    400030: middle_L_1
+    400032: middle_L_2
+    400034: middle_L_3
+    400036: middle_L_end
+    400038: middle_R_1
+    400040: middle_R_2
+    400042: middle_R_3
+    400044: middle_R_end
+    400046: pinky_L_1
+    400048: pinky_L_2
+    400050: pinky_L_3
+    400052: pinky_L_end
+    400054: pinky_R_1
+    400056: pinky_R_2
+    400058: pinky_R_3
+    400060: pinky_R_end
+    400062: ring_L_1
+    400064: ring_L_2
+    400066: ring_L_3
+    400068: ring_L_end
+    400070: ring_R_1
+    400072: ring_R_2
+    400074: ring_R_3
+    400076: ring_R_end
+    400078: Root
+    400080: thumb_L_1
+    400082: thumb_L_2
+    400084: thumb_L_3
+    400086: thumb_L_end
+    400088: thumb_R_1
+    400090: thumb_R_2
+    400092: thumb_R_3
+    400094: thumb_R_end
+    400096: wrist_L
+    400098: Wrist_L_root
+    400100: wrist_R
+    400102: Wrist_R_root
+    4300000: IvaHand
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: IvaHand
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HandMaterial
+    second: {fileID: 2100000, guid: 9b17729436a2b3f40abd51bf1be0a258, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
