@@ -84,7 +84,6 @@ public class Grabber : MonoBehaviour
     }
 
     List<GameObject> m_GrabbableObjectsCandidates;
-    public List<GameObject> m_GrabbableUICandidates;
 
     new Transform transform;
 
@@ -112,7 +111,6 @@ public class Grabber : MonoBehaviour
         transform = base.transform;
 
         m_GrabbableObjectsCandidates = new List<GameObject>();
-        m_GrabbableUICandidates = new List<GameObject>();
 
         m_Joint = GetComponent<FixedJoint>();
     }
@@ -171,7 +169,44 @@ public class Grabber : MonoBehaviour
         }
 
         UpdateAnimator();
+
+
+        if (m_CurrentGrabbedObject != null)
+        {
+            float xRightScale = Input.GetAxis("RightTrackpadVertical") * 0.01f;
+            /*float zRightScale = Input.GetAxis("RightTrackpadVertical") * 0.1f;
+
+            m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale = new Vector3(m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.x + xRightScale, m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.y, m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.z);
+            m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale = new Vector3(m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.x, m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.y, m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.z + zRightScale);
+
+            float allScale = Input.GetAxis("LeftTrackpadHorizontal") * 0.1f;
+
+            m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale = new Vector3(m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.x + allScale, m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.y + allScale, m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.z + allScale);
+
+            float yScale = Input.GetAxis("LeftTrackpadVertical") * 0.1f;
+
+            m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale = new Vector3(m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.x, transform.localScale.y + yScale, m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.z);
+        */
+            ScaleAround(m_CurrentGrabbedObject.m_GrabbableObject.gameObject, m_Joint.connectedAnchor, new Vector3(m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.x + xRightScale, m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.y + xRightScale, m_CurrentGrabbedObject.m_GrabbableObject.transform.localScale.z + xRightScale));
+        }
 	}
+
+    public void ScaleAround(GameObject target, Vector3 pivot, Vector3 newScale)
+    {
+        Vector3 A = target.transform.localPosition;
+        Vector3 B = pivot;
+
+        Vector3 C = A - B; // diff from object pivot to desired pivot/origin
+
+        float RS = newScale.x / target.transform.localScale.x; // relative scale factor
+
+        // calc final position post-scale
+        Vector3 FP = B + C * RS;
+
+        // finally, actually perform the scale/translation
+        target.transform.localScale = newScale;
+        target.transform.localPosition = FP;
+    }
 
     public bool ContainsParam(string parameter)
     {
@@ -282,25 +317,22 @@ public class Grabber : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         GrabbableInformation grabbable;
-        if(GrabbableObjectsDic.TryGetValue(other.gameObject, out grabbable))
+        if(other.attachedRigidbody != null && GrabbableObjectsDic.TryGetValue(other.attachedRigidbody.gameObject, out grabbable))
         {
-            m_GrabbableObjectsCandidates.Add(other.gameObject);
-        }
-        else if (GrabbableUIDic.TryGetValue(other.gameObject, out grabbable))
-        {
-            m_GrabbableUICandidates.Add(other.gameObject);
+            m_GrabbableObjectsCandidates.Add(other.attachedRigidbody.gameObject);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if(m_GrabbableObjectsCandidates.Contains(other.gameObject))
+        if(other.attachedRigidbody == null)
         {
-            m_GrabbableObjectsCandidates.Remove(other.gameObject);
+            return;
         }
-        else if(m_GrabbableUICandidates.Contains(other.gameObject))
-        { 
-            m_GrabbableUICandidates.Remove(other.gameObject);
+
+        if(m_GrabbableObjectsCandidates.Contains(other.attachedRigidbody.gameObject))
+        {
+            m_GrabbableObjectsCandidates.Remove(other.attachedRigidbody.gameObject);
         }
     }
 }

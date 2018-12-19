@@ -24,7 +24,7 @@ public class WalkByKeyboard : MonoBehaviour
     {
         float vel = m_Velocity;
 
-        if(Input.GetKey(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space))
         {
             m_Fly = !m_Fly;
             y = transform.position.y;
