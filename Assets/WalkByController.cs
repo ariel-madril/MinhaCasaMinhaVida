@@ -10,6 +10,9 @@ public class WalkByController : MonoBehaviour
     [SerializeField]
     Transform m_TransformToUse;
 
+    [SerializeField]
+    bool m_Teleport;
+
     bool m_Fly = false;
 
     float y = 0;
@@ -35,12 +38,15 @@ public class WalkByController : MonoBehaviour
             vel *= 3;
         }*/
 
-        float axisValue = Input.GetAxis("LeftThumbstickVertical") + Input.GetAxis("RightThumbstickVertical");
-        //Debug.Log(axisValue);
-        transform.position += (m_TransformToUse.transform.forward * vel) * axisValue;
+        if(!m_Teleport)
+        {
+            float axisValue = Input.GetAxis("LeftThumbstickVertical") + Input.GetAxis("RightThumbstickVertical");
+            //Debug.Log(axisValue);
+            transform.position += (m_TransformToUse.transform.forward * vel) * axisValue;
 
-        axisValue = Input.GetAxis("LeftThumbstickHorizontal");
-        transform.position += (m_TransformToUse.transform.right * vel) * axisValue;
+            axisValue = Input.GetAxis("LeftThumbstickHorizontal");
+            transform.position += (m_TransformToUse.transform.right * vel) * axisValue;
+        }
 
         transform.Rotate(transform.up, 1f * Input.GetAxis("RightThumbstickHorizontal"));
 
