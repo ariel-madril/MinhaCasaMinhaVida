@@ -1,22 +1,45 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class GrabbableObject : Grabbable
 {
     public bool m_Snap = false;
 
+    List<Renderer> m_Renderers;
+
+    List<Material> m_DefaultMaterias;
+
     private void OnEnable()
     {
+        m_Renderers = new List<Renderer>();
+
+        m_DefaultMaterias = new List<Material>();
+
+        Renderer ownRenderer = GetComponent<Renderer>();
+
+        if (ownRenderer != null)
+        {
+            m_Renderers.Add(ownRenderer);
+        }
+
+        Renderer[] childRenderers = GetComponentsInChildren<Renderer>();
+
+        if(childRenderers.Length > 0)
+        {
+            m_Renderers.AddRange(new List<Renderer>(childRenderers));
+        }
+
+        for(int i = 0; i < m_Renderers.Count; i++)
+        {
+            m_DefaultMaterias.Add(m_Renderers[i].material);
+        }
+
         Grabber.AddGrabbableObjectReference(this);
     }
 
     public override void ObjectGrabbed(Grabber grabber)
     {
         base.ObjectGrabbed(grabber);
-
-        if(m_CurrentGrabber != null)
-        {
-            m_CurrentGrabber.GrabbedObjectTakenAway();
-        }
 
         m_CurrentGrabber = grabber;
 
@@ -35,13 +58,29 @@ public class GrabbableObject : Grabbable
         }
     }
 
+    public void RestoreMat()
+    {
+        for (int i = 0; i < m_DefaultMaterias.Count; i++)
+        {
+            m_Renderers[i].material = m_DefaultMaterias[i];
+        }
+    }
+
+    public void SetHoverMat(Material mat)
+    {
+        if(m_CurrentGrabber != null)
+        {
+            return;
+        }
+
+        foreach(Renderer rend in m_Renderers)
+        {
+            rend.material = mat;
+        }
+    }
+
     private void Update()
     {
-        if (m_Snap && m_CurrentGrabber != null)
-        {
-            transform.position = m_CurrentGrabber.SnapPosition.transform.position;
-            transform.rotation = m_CurrentGrabber.SnapPosition.transform.rotation;
-        }
     }
 
     private void OnDisable()
