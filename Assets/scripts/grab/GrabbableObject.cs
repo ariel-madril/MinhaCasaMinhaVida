@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class GrabbableObject : Grabbable
 {
+    public enum ObjectType
+    {
+        FLOOR,
+        WALL
+    }
+
+    public ObjectType m_Type;
+
     public bool m_Snap = false;
 
     List<Renderer> m_Renderers;

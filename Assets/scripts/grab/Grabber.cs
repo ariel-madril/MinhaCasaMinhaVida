@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SpatialTracking;
 
@@ -43,6 +44,11 @@ public class Grabber : MonoBehaviour
         }
     }
 
+    #region MouseKeyboar Input
+    static bool m_UseMouseKeyboardInput = true;
+    private static PlayerHand m_CurrentKeyboardMouseHandInput = PlayerHand.RIGHT;
+    private Vector3 m_LastMousePos;
+    #endregion
     private static Dictionary<GameObject, GrabbableInformation> m_GrabbableUIDic;
     public static Dictionary<GameObject, GrabbableInformation> GrabbableUIDic
     {
@@ -80,7 +86,7 @@ public class Grabber : MonoBehaviour
 
     new Transform transform;
 
-    FixedJoint m_Joint;
+    Transform m_MainCamera;
 
     public static void AddGrabbableObjectReference(Grabbable grabbable)
     {
@@ -96,6 +102,7 @@ public class Grabber : MonoBehaviour
     {
         SetHandModel();
         m_Body = GetComponent<Rigidbody>();
+        m_MainCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
     }
 
     // Use this for initialization
@@ -105,40 +112,38 @@ public class Grabber : MonoBehaviour
 
         m_GrabbableObjectsCandidates = new List<GrabbableObjectCandidateInfo>();
 
-        m_Joint = GetComponent<FixedJoint>();
-
         ResizeController.Instance.m_HandsReference.Add(this);
     }
 
     public void SetHandModel()
     {
-        if(m_Animator == null)
+        if (m_Animator == null)
         {
             m_Animator = gameObject.GetComponent<Animator>();
 
-            if(m_Animator == null)
+            if (m_Animator == null)
             {
                 m_Animator = gameObject.GetComponentInChildren<Animator>();
             }
 
-            if(m_Animator != null)
+            if (m_Animator != null)
             {
                 m_RefreshGrabAmount = ContainsParam("GrabAmount");
             }
         }
 
-        if(m_HandModel != null)
+        if (m_HandModel != null)
         {
             return;
         }
 
         SkinnedMeshRenderer rendererObject = GetComponent<SkinnedMeshRenderer>();
-        if(rendererObject == null)
+        if (rendererObject == null)
         {
             rendererObject = GetComponentInChildren<SkinnedMeshRenderer>();
         }
-        
-        if(rendererObject != null)
+
+        if (rendererObject != null)
         {
             m_HandModel = rendererObject.gameObject;
         }
@@ -148,23 +153,120 @@ public class Grabber : MonoBehaviour
         }
     }
 
-	// Update is called once per frame
-	void LateUpdate ()
+    // Update is called once per frame
+    void LateUpdate()
     {
         string button = m_PlayerHand == PlayerHand.LEFT ? "LeftTriggerTouch" : "RightTriggerTouch";
 
-        if (m_CurrentGrabbedObject == null && Input.GetButtonDown(button))
+        bool mouseClick = m_CurrentKeyboardMouseHandInput == m_PlayerHand && Input.GetMouseButtonDown(0);
+
+        if (m_CurrentGrabbedObject == null && (Input.GetButtonDown(button) || mouseClick))
         {
             HandleGrab();
         }
 
-        if (Input.GetButtonUp(button))
+        if (Input.GetButtonUp(button) || Input.GetMouseButtonUp(0))
         {
             HandleRelease();
         }
 
         UpdateAnimator();
+
+        UpdateMouseKeyboardInput();
+
+        UpdateGrabbedObject();
 	}
+
+    private void UpdateGrabbedObject()
+    {
+        if(ResizeController.Instance.IsResizing())
+        {
+            return;
+        }
+
+        if(m_CurrentGrabbedObject != null)
+        {
+
+            Ray grabRay = new Ray(transform.position, transform.forward);
+            RaycastHit hit;
+
+            LayerMask mask = 1 << LayerMask.NameToLayer("wall") | LayerMask.NameToLayer("floor");
+
+            if(Physics.Raycast(grabRay, out hit, 3, mask))
+            {
+                if (hit.normal.y > 0.5f)
+                {
+                    m_CurrentGrabbedObject.m_GrabbableObject.transform.forward = Vector3.Cross(m_CurrentGrabbedObject.m_GrabbableObject.transform.right, Vector3.up);
+                }
+
+                if (hit.normal.y < 0.5f)
+                {
+                    m_CurrentGrabbedObject.m_GrabbableObject.transform.forward = hit.normal;
+                }
+            }
+        }
+    }
+
+    #region MouseKeyboard Input
+    private void UpdateMouseKeyboardInput()
+    {
+        if(Input.GetKeyDown(KeyCode.M))
+        {
+            m_UseMouseKeyboardInput = !m_UseMouseKeyboardInput;
+        }
+
+        if(!m_UseMouseKeyboardInput)
+        {
+            return;
+        }
+
+        Vector2 mouseDelta = Input.mousePosition - m_LastMousePos;
+
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            m_CurrentKeyboardMouseHandInput = PlayerHand.LEFT;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            m_CurrentKeyboardMouseHandInput = PlayerHand.RIGHT;
+        }
+
+        if (m_CurrentKeyboardMouseHandInput == m_PlayerHand)
+        {
+            if(Input.GetKey(KeyCode.LeftShift))
+            {
+                transform.position += m_MainCamera.right * mouseDelta.x * 0.1f;
+                transform.position += m_MainCamera.up * mouseDelta.y * 0.1f;
+            }
+            else
+            {
+                transform.Rotate(Vector3.up, mouseDelta.x);
+                transform.Rotate(Vector3.right, mouseDelta.y);
+            }
+
+            if(Input.GetKey(KeyCode.UpArrow))
+            {
+                transform.position += transform.forward * 0.01f;
+            }
+
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                transform.position += transform.forward * -0.01f;
+            }
+
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                transform.position += transform.right * 0.01f;
+            }
+
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                transform.position += transform.right * -0.01f;
+            }
+        }
+        m_LastMousePos = Input.mousePosition;
+    }
+    #endregion
 
     public void ScaleAround(GameObject target, Vector3 pivot, Vector3 newScale)
     {
@@ -228,7 +330,9 @@ public class Grabber : MonoBehaviour
                 grabbableObj.m_GrabbableObject.ObjectGrabbed(this);
                 m_CurrentGrabbedObject = grabbableObj;
                 m_CurrentGrabbedObject.m_GrabbableObject.RestoreMat();
-                m_Joint.connectedBody = grabbableObj.m_Body;
+                grabbableObj.m_GrabbableObject.transform.parent = transform;
+                grabbableObj.m_Body.isKinematic = true;
+                grabbableObj.m_Body.useGravity = false;
                 m_LastObjectLayer = grabbableObj.m_GrabbableObject.gameObject.layer;
                 SetLayerToObject(grabbableObj.m_GrabbableObject.gameObject, LayerMask.NameToLayer("Moving"));
             }
@@ -257,10 +361,12 @@ public class Grabber : MonoBehaviour
             ResizeController.Instance.ExitResizeMode();
         }
 
-        m_Joint.connectedBody = null;
-
         if(m_CurrentGrabbedObject != null)
         {
+            m_CurrentGrabbedObject.m_GrabbableObject.transform.parent = null;
+            m_CurrentGrabbedObject.m_Body.isKinematic = m_CurrentGrabbedObject.KinematicSetup;
+            m_CurrentGrabbedObject.m_Body.useGravity = m_CurrentGrabbedObject.GravitySetup;
+
             m_CurrentGrabbedObject.m_Body.velocity = m_Body.velocity;
             m_CurrentGrabbedObject.m_Body.angularVelocity = m_Body.angularVelocity;
 

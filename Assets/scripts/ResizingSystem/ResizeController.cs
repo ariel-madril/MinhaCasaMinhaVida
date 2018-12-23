@@ -20,18 +20,11 @@ public class ResizeController : MonoBehaviour
 
     Transform m_ResizerPivot;
 
-    float m_LastDistance;
-
     private Transform m_MainCamera;
 
-    public enum ResizeMode
-    {
-        LOCAL,
-        GLOBAL
-    }
+    float m_ResizeDistanceReference;
 
-    [SerializeField]
-    private ResizeMode m_ResizeMode;
+    Transform m_LastParent;
 
 
     // Start is called before the first frame update
@@ -59,8 +52,6 @@ public class ResizeController : MonoBehaviour
             m_ResizerAnchor2 = m_HandsReference[1].transform;
         }
 
-        m_ResizerPivot.position = (m_ResizerAnchor1.position + m_ResizerAnchor2.position) / 2;
-
         if (m_ResizableObject != null)
         {
             PerformResize();
@@ -73,15 +64,36 @@ public class ResizeController : MonoBehaviour
         m_ResizableObject = resizableObject.transform;
         m_ResizableObjectBody = m_ResizableObject.GetComponent<Rigidbody>();
         m_ResizingHand = resizingHand;
-        m_LastDistance = 0;
+
+        m_ResizerPivot.rotation = m_MainCamera.rotation;
+
+        m_ResizerPivot.position = m_ResizableObjectBody.worldCenterOfMass;
+
+        m_ResizerPivot.right = Vector3.Cross(m_ResizerPivot.forward, Vector3.up);
+
+        m_ResizeDistanceReference = Vector3.Distance(m_ResizerAnchor1.position, m_ResizerAnchor2.position);
+
+        m_LastParent = m_ResizableObject.parent;
+
+        m_ResizerPivot.position = (m_ResizerAnchor1.position + m_ResizerAnchor2.position) / 2;
+
+        float distanceToObj = Vector3.Distance(m_ResizableObjectBody.worldCenterOfMass, m_ResizerPivot.position);
+
+        m_ResizerPivot.position += m_ResizerPivot.forward * distanceToObj * -1;
+
+        m_ResizableObject.parent = m_ResizerPivot;
+
+        m_ResizerPivot.parent = m_LastParent;
     }
 
     public void ExitResizeMode()
     {
         if(m_ResizableObject != null)
         {
-            m_ResizableObject.parent = null;
+            m_ResizableObject.parent = m_LastParent;
         }
+
+        m_ResizerPivot.parent = null;
 
         m_ResizableObject = null;
 
@@ -98,37 +110,28 @@ public class ResizeController : MonoBehaviour
             return;
         }
 
-        m_ResizerPivot.position = m_ResizableObjectBody.worldCenterOfMass;
-
-        m_ResizerPivot.rotation = m_MainCamera.rotation;
-
-        m_ResizableObject.parent = m_ResizerPivot;
-
         float currentDistance = Vector3.Distance(m_ResizerAnchor1.position, m_ResizerAnchor2.position);
 
-        if(m_LastDistance == 0)
+        float distanceDelta = currentDistance - m_ResizeDistanceReference;
+
+        if(Mathf.Abs(distanceDelta) < 0.05f)
         {
-            m_LastDistance = currentDistance;
+            distanceDelta = 0;
         }
 
-        float distanceDelta = currentDistance - m_LastDistance;
+        distanceDelta *= 3;
+
+        distanceDelta = Mathf.Min(distanceDelta, 0.01f);
+        distanceDelta = Mathf.Max(distanceDelta, -0.01f);
 
         Vector3 currentScale = m_ResizerPivot.localScale;
 
-        switch (m_ResizeMode)
-        {
-            case ResizeMode.LOCAL:
-                m_ResizerPivot.localScale = new Vector3(currentScale.x + distanceDelta, currentScale.y, currentScale.z);
-                break;
-            case ResizeMode.GLOBAL:
-                m_ResizerPivot.localScale = new Vector3(currentScale.x + distanceDelta, currentScale.y + distanceDelta, currentScale.z + distanceDelta);
-                break;
-            default:
-                break;
-        }
+        m_ResizerPivot.localScale = new Vector3(currentScale.x + distanceDelta, currentScale.y + distanceDelta, currentScale.z + distanceDelta);
 
-        m_ResizableObject.parent = null;
+    }
 
-        m_LastDistance = currentDistance;
+    public bool IsResizing()
+    {
+        return m_ResizableObject != null;
     }
 }

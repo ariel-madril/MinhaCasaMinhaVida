@@ -6,10 +6,15 @@ public class GrabbableInformation
     public Rigidbody m_Body;
     public GrabbableObject m_GrabbableObject;
 
+    public bool GravitySetup { get; private set; }
+    public bool KinematicSetup { get; private set; }
+
     public GrabbableInformation(Rigidbody body, GrabbableObject grabbableObject = null)
     {
         m_Body = body;
         m_GrabbableObject = grabbableObject;
+        GravitySetup = body.useGravity;
+        KinematicSetup = body.isKinematic;
     }
 }
 
