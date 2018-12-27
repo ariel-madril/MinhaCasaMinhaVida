@@ -45,4 +45,34 @@ public class UIItemController : MonoBehaviour
     {
         m_Animator.SetTrigger("Hide");
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            m_Animator.SetBool("Selected", true);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            if (Input.GetButtonDown("LeftTrackpadPress"))
+            {
+                if(m_ItemSelected != null)
+                {
+                    m_ItemSelected.Invoke();
+                }
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.tag == "Player")
+        {
+            m_Animator.SetBool("Selected", false);
+        }
+    }
 }

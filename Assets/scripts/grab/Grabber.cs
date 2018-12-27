@@ -151,7 +151,7 @@ public class Grabber : MonoBehaviour
 	// Update is called once per frame
 	void LateUpdate ()
     {
-        string button = m_PlayerHand == PlayerHand.LEFT ? "LeftTriggerTouch" : "RightTriggerTouch";
+        string button = m_PlayerHand == PlayerHand.LEFT ? "LeftTriggerPress" : "RightTriggerPress";
 
         if (m_CurrentGrabbedObject == null && Input.GetButtonDown(button))
         {
@@ -257,7 +257,10 @@ public class Grabber : MonoBehaviour
             ResizeController.Instance.ExitResizeMode();
         }
 
-        m_Joint.connectedBody = null;
+        if(m_Joint != null)
+        {
+            m_Joint.connectedBody = null;
+        }
 
         if(m_CurrentGrabbedObject != null)
         {

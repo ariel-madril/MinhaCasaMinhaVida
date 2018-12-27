@@ -13,12 +13,6 @@ public class UIHandMenuController : MonoBehaviour
     [SerializeField]
     private GameObject m_UIPivot;
 
-    [SerializeField]
-    private float m_MenuRadius = 3;
-
-    [SerializeField]
-    private List<float> m_DegreesBetweenItens;
-
     Coroutine ShowHideItensRoutine;
 
     // Start is called before the first frame update
@@ -37,11 +31,11 @@ public class UIHandMenuController : MonoBehaviour
 
     public void SetupMenuItem(UIItemInfo item)
     {
-        GameObject newItemInstance = GameObject.Instantiate(m_UIMenuItem);
+        GameObject newItemInstance = GameObject.Instantiate(m_UIMenuItem, m_UIPivot.transform);
+        newItemInstance.transform.localPosition = new Vector3(newItemInstance.transform.localPosition.x, newItemInstance.transform.localPosition.y, 0);
         UIItemController newItem = newItemInstance.GetComponent<UIItemController>();
         m_MenuItens.Add(newItem);
         newItem.Setup(item);
-        newItem.transform.parent = m_UIPivot.transform;
     }
 
     public void ShowMenuItens(ScriptableObject obj)

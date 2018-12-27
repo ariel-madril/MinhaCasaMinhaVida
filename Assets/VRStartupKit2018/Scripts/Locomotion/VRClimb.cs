@@ -22,11 +22,11 @@ namespace VRStartupKit2018
 			leftClimbing=rightClimbing=false;
 		}
 		void Update () {
-			if(!Input.GetButton("LeftTriggerTouch") || leftClimbingTarget==null)
+			if(!Input.GetButton("LeftTriggerPress") || leftClimbingTarget==null)
 				leftClimbing=false;
-			if(!Input.GetButton("RightTriggerTouch") || leftClimbingTarget==null)
+			if(!Input.GetButton("RightTriggerPress") || leftClimbingTarget==null)
 				rightClimbing=false;
-			if(Input.GetButtonDown("LeftTriggerTouch")){
+			if(Input.GetButtonDown("LeftTriggerPress")){
 				Collider[] info=Physics.OverlapSphere(Left.transform.position-Left.transform.up*handRadius,	handRadius*1.01f);
 				foreach(var h in info){
 					if(h.GetComponent<VRClimbableSurface>()!=null){
@@ -37,7 +37,7 @@ namespace VRStartupKit2018
 					}
 				}
 			}
-			if(Input.GetButtonDown("RightTriggerTouch")){
+			if(Input.GetButtonDown("RightTriggerPress")){
 				Collider[] info=Physics.OverlapSphere(Right.transform.position-Right.transform.up*handRadius,handRadius*1.01f);
 				foreach(var h in info){
 					if(h.GetComponent<VRClimbableSurface>()!=null){
