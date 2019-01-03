@@ -34,20 +34,15 @@ namespace VRStartupKit2018
 			*/
 		}
 		// Update is called once per frame
-		void Update () {
-			{
-				float lth=Input.GetAxis("LeftTrackpadHorizontal");
-				float ltv=Input.GetAxis("LeftTrackpadVertical");
-				if(Mathf.Abs(lth)>trackpadHorizontalThreshold||Mathf.Abs(ltv)>trackpadVerticalThreshold){
-					Line.gameObject.SetActive(false);
-					TargetCircle.gameObject.SetActive(false);
-					return;
-				}
-			}
-			if(Input.GetButtonUp("LeftTrackpadPress")  && TargetCircle.gameObject.activeInHierarchy){
+		void Update ()
+        {
+            float lth = Input.GetAxis("LeftThumbstickVertical");
+
+            if (Input.GetButtonUp("LeftGripPress")  && TargetCircle.gameObject.activeInHierarchy){
 				teleportTarget.position=TargetCircle.transform.position;
 			}
-			if(Input.GetButton("LeftTrackpadPress") ){
+			if(lth > 0)
+            {
 				Line.gameObject.SetActive(true);
 				Vector3 x=Left.transform.position;
 				Vector3 v=Left.transform.forward*velo;

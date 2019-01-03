@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f151976f83a71704d926bdfd08fc440b, type: 3}
+  m_Name: MCMV
+  m_EditorClassIdentifier: 
+  m_Data:
+  - m_Key: ShowMainUI
+    m_Value: {fileID: 0}
+    m_Group: {fileID: 11400000, guid: 5dfbc40f71884d24482255fdf5ed82a2, type: 2}
+    m_ExpandedValue: 0
+  - m_Key: MainMenuShown
+    m_Value: {fileID: 0}
+    m_Group: {fileID: 11400000, guid: 5dfbc40f71884d24482255fdf5ed82a2, type: 2}
+    m_ExpandedValue: 0
+  - m_Key: MainMenuHidden
+    m_Value: {fileID: 0}
+    m_Group: {fileID: 11400000, guid: 5dfbc40f71884d24482255fdf5ed82a2, type: 2}
+    m_ExpandedValue: 0
+  - m_Key: HideMainUI
+    m_Value: {fileID: 0}
+    m_Group: {fileID: 11400000, guid: 5dfbc40f71884d24482255fdf5ed82a2, type: 2}
+    m_ExpandedValue: 0
+  - m_Key: UIItemShown
+    m_Value: {fileID: 11400000, guid: d987669d65ad1354eae5eaaee2e0cb0e, type: 2}
+    m_Group: {fileID: 11400000, guid: 5dfbc40f71884d24482255fdf5ed82a2, type: 2}
+    m_ExpandedValue: 0
+  - m_Key: UIItemHidden
+    m_Value: {fileID: 11400000, guid: d987669d65ad1354eae5eaaee2e0cb0e, type: 2}
+    m_Group: {fileID: 11400000, guid: 5dfbc40f71884d24482255fdf5ed82a2, type: 2}
+    m_ExpandedValue: 0
+  - m_Key: AddMenuItem
+    m_Value: {fileID: 11400000, guid: c12b0138ced458e458d53496ec0d17f0, type: 2}
+    m_Group: {fileID: 11400000, guid: 5dfbc40f71884d24482255fdf5ed82a2, type: 2}
+    m_ExpandedValue: 0
+  - m_Key: ShowMenuItens
+    m_Value: {fileID: 0}
+    m_Group: {fileID: 11400000, guid: 5dfbc40f71884d24482255fdf5ed82a2, type: 2}
+    m_ExpandedValue: 0
